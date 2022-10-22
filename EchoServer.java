@@ -2,7 +2,8 @@
 // "Object Oriented Software Engineering" and is issued under the open-source
 // license found at www.lloseng.com 
 
-
+import java.io.*;
+import common.ChatIF;
 import ocsf.server.*;
 
 /**
@@ -24,6 +25,7 @@ public class EchoServer extends AbstractServer
    */
   final public static int DEFAULT_PORT = 5555;
   
+  ChatIF serverUI;
   //Constructors ****************************************************
   
   /**
@@ -39,6 +41,16 @@ public class EchoServer extends AbstractServer
   
   //Instance methods ************************************************
   
+  synchronized protected void clientDisconnected(ConnectionToClient client) {
+	  this.sendToAllClients(client.getInfo("id")+" has disconnected");
+	  System.out.println(client.getInfo("id")+" has disconnected");
+  }
+  
+  protected void clientConnected(ConnectionToClient client) {
+	  System.out.println("A new client has connected to the server.");
+	  System.out.println("Message received: #login from " + client.getInfo("id"));
+  }
+  
   /**
    * This method handles any messages received from the client.
    *
@@ -48,6 +60,21 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+	  String s = (String)msg;
+	  if(s.contains("#login")) {
+		  client.setInfo("id", s.substring(7));
+		  serverUI.display("User: " + s.substring(7) + " has connected to server");
+		  this.sendToAllClients("User: " + msg.toString().substring(7) + " has connected to server");
+		  
+	  }else if(s.contains("#logoff") || s.contains("#quit")) {
+		  try {
+			client.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  
+	  }else {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
@@ -105,5 +132,62 @@ public class EchoServer extends AbstractServer
       System.out.println("ERROR - Could not listen for clients!");
     }
   }
+  
+  public void handleMessageFromServerUI(String message) {
+		switch(message) {
+	  	case "#quit":
+	  		try {
+				close();
+			} catch (IOException e) {
+				serverUI.display("Could not quit");
+			}
+	  		System.exit(0);
+	  		break;
+	  	
+	  	case "#stop":
+			stopListening();
+	  		break;
+	  	
+	  	case "#close":
+			try {
+				stopListening();
+				close();
+			} catch (IOException e) {
+				serverUI.display("Could not close");
+			}
+	  		break;
+	  	
+	  	case "#start":
+	  		try {
+				listen();
+			} catch (IOException e) {
+				serverUI.display("Could not start");
+			}
+	  		break;
+	  	
+	  	case "#getport":
+	  		serverUI.display(Integer.toString(getPort()));
+	  		break;
+	  	
+	  	default:
+	  		if(message.length() > 9 && message.substring(0,8).equals("#setport")) {
+	  			if(!isListening()) {
+	  			   try {
+	  				   setPort(Integer.parseInt(message.substring(9)));
+	  				   System.out.println("The port is set to: " + message.substring(9));
+	  			   }
+	  			   catch(Exception e){
+	  				   serverUI.display("Invalide port");
+	  			   }
+	  			 } else {
+	  				 serverUI.display("Unable to change port");
+	  			 }
+	  		} else {
+	  			this.sendToAllClients("SERVER MESSAGE>" + message);
+	  			serverUI.display("SERVER MESSAGE>" + message);
+	  		}
+		}
+	}
+  
 }
 //End of EchoServer class
