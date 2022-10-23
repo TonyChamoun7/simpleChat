@@ -33,9 +33,10 @@ public class EchoServer extends AbstractServer
    *
    * @param port The port number to connect on.
    */
-  public EchoServer(int port) 
+  public EchoServer(int port, ChatIF serverUI) 
   {
     super(port);
+    this.serverUI = serverUI;
   }
 
   
@@ -61,6 +62,7 @@ public class EchoServer extends AbstractServer
     (Object msg, ConnectionToClient client)
   {
 	  String s = (String)msg;
+	  
 	  if(s.contains("#login")) {
 		  client.setInfo("id", s.substring(7));
 		  serverUI.display("User: " + s.substring(7) + " has connected to server");
@@ -77,6 +79,7 @@ public class EchoServer extends AbstractServer
 	  }else {
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
+  }
   }
     
   /**
@@ -121,7 +124,8 @@ public class EchoServer extends AbstractServer
       port = DEFAULT_PORT; //Set port to 5555
     }
 	
-    EchoServer sv = new EchoServer(port);
+    ServerConsole console = new ServerConsole(port);
+    EchoServer sv = new EchoServer(port, console);
     
     try 
     {
