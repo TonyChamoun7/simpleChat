@@ -64,7 +64,7 @@ public class ChatClient extends AbstractClient
   
   protected void connectionException(Exception exception) {
 		System.out.println("WARNING - The server has stopped listening for connections\n"
-				+ "SERVER SHUTTING DOWN! DISCONNECTING!\n"
+				+ "Server is shutting down and disconnecting!\n"
 				+ "Abnormal termination of connection.");
 	}
     
@@ -101,7 +101,7 @@ public class ChatClient extends AbstractClient
 				sendToServer(message);
 				closeConnection();
 			} catch (IOException e) {
-				clientUI.display("Unable to logoff");
+				clientUI.display("Could not logoff");
 			}
 	  		break;
 	  	
@@ -119,7 +119,7 @@ public class ChatClient extends AbstractClient
 	  			   setHost(message.substring(9));
 	  			   System.out.println("The host is set to: " + message.substring(9));
 	  			 } else {
-	  				clientUI.display("Unable to change host");
+	  				clientUI.display("Could not change host");
 	  			 }
 	  		} else if(message.length() > 9 && message.substring(0,8).equals("#setport")) {
 	  			if(!isConnected()) {
@@ -131,7 +131,7 @@ public class ChatClient extends AbstractClient
 	  				   clientUI.display("Invalide port");
 	  			   }
 	  			 } else {
-	  				 clientUI.display("Unable to change port");
+	  				 clientUI.display("Could not change port");
 	  			 }
 	  		} else if(message.length() > 7 && message.substring(0,6).equals("#login")) {
 	  			if(!isConnected()) {
@@ -139,7 +139,7 @@ public class ChatClient extends AbstractClient
 	  					openConnection();
 						sendToServer(message);
 	  				}catch(Exception e) {
-	  					clientUI.display("Unable to login");
+	  					clientUI.display("Could not login");
 	  				}
 				} else {
 					clientUI.display("You are already logged in");		

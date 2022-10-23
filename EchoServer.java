@@ -48,7 +48,7 @@ public class EchoServer extends AbstractServer
   }
   
   protected void clientConnected(ConnectionToClient client) {
-	  System.out.println("A new client has connected to the server.");
+	  System.out.println("New client has connected to the server.");
 	  System.out.println("Message received: #login from " + client.getInfo("id"));
   }
   
@@ -184,7 +184,7 @@ public class EchoServer extends AbstractServer
 	  				   serverUI.display("Invalide port");
 	  			   }
 	  			 } else {
-	  				 serverUI.display("Unable to change port");
+	  				 serverUI.display("Could not change port");
 	  			 }
 	  		} else {
 	  			this.sendToAllClients("SERVER MESSAGE>" + message);
