@@ -92,7 +92,7 @@ public class ClientConsole implements ChatIF
         client.handleMessageFromClientUI(message);
       }
     } 
-    catch (Exception ex) 
+    catch (Exception e) 
     {
       System.out.println
         ("Unexpected error while reading from console!");
