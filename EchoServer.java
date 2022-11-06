@@ -43,8 +43,8 @@ public class EchoServer extends AbstractServer
   //Instance methods ************************************************
   
   synchronized protected void clientDisconnected(ConnectionToClient client) {
-	  this.sendToAllClients(client.getInfo("id")+" has disconnected");
-	  System.out.println(client.getInfo("id")+" has disconnected");
+	  this.sendToAllClients(client.getInfo("id")+" has disconnected from the server");
+	  System.out.println(client.getInfo("id")+" has disconnected from the server");
   }
   
   protected void clientConnected(ConnectionToClient client) {
@@ -65,8 +65,8 @@ public class EchoServer extends AbstractServer
 	  
 	  if(s.contains("#login")) {
 		  client.setInfo("id", s.substring(7));
-		  serverUI.display("User: " + s.substring(7) + " has connected to server");
-		  this.sendToAllClients("User: " + msg.toString().substring(7) + " has connected to server");
+		  serverUI.display("User: " + s.substring(7) + " has succesfully connected to the server");
+		  this.sendToAllClients("User: " + msg.toString().substring(7) + " has succesfully connected to the server");
 		  
 	  }else if(s.contains("#logoff") || s.contains("#quit")) {
 		  try {
@@ -139,7 +139,8 @@ public class EchoServer extends AbstractServer
   
   public void handleMessageFromServerUI(String message) {
 		switch(message) {
-	  	case "#quit":
+	  	
+		case "#quit":
 	  		try {
 				close();
 			} catch (IOException e) {
@@ -175,13 +176,14 @@ public class EchoServer extends AbstractServer
 	  	
 	  	default:
 	  		if(message.length() > 9 && message.substring(0,8).equals("#setport")) {
+	  			
 	  			if(!isListening()) {
 	  			   try {
 	  				   setPort(Integer.parseInt(message.substring(9)));
 	  				   System.out.println("The port is set to: " + message.substring(9));
 	  			   }
 	  			   catch(Exception e){
-	  				   serverUI.display("Invalide port");
+	  				   serverUI.display("Invalid port");
 	  			   }
 	  			 } else {
 	  				 serverUI.display("Could not change port");

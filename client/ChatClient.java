@@ -97,7 +97,8 @@ public class ChatClient extends AbstractClient
 	  		break;
 	  	
 	  	case "#logoff":
-			try {
+			
+	  		try {
 				sendToServer(message);
 				closeConnection();
 			} catch (IOException e) {
@@ -114,37 +115,48 @@ public class ChatClient extends AbstractClient
 	  		break;
 	  	
 	  	default:
+	  		
 	  		if(message.length() > 9 && message.substring(0,8).equals("#sethost")) {
-	  			 if(!isConnected()) {
+	  			 
+	  			if(!isConnected()) {
 	  			   setHost(message.substring(9));
 	  			   System.out.println("The host is set to: " + message.substring(9));
 	  			 } else {
 	  				clientUI.display("Could not change host");
 	  			 }
-	  		} else if(message.length() > 9 && message.substring(0,8).equals("#setport")) {
+	  		} 
+	  		else if(message.length() > 9 && message.substring(0,8).equals("#setport")) {
 	  			if(!isConnected()) {
 	  			   try {
 	  				   setPort(Integer.parseInt(message.substring(9)));
 	  				   System.out.println("The port is set to: " + message.substring(9));
 	  			   }
+	  			   
 	  			   catch(Exception e){
 	  				   clientUI.display("Invalide port");
 	  			   }
+	  			   
 	  			 } else {
 	  				 clientUI.display("Could not change port");
 	  			 }
-	  		} else if(message.length() > 7 && message.substring(0,6).equals("#login")) {
+	  		} 
+	  		else if(message.length() > 7 && message.substring(0,6).equals("#login")) {
+	  			
 	  			if(!isConnected()) {
+	  				
 	  				try {
 	  					openConnection();
 						sendToServer(message);
 	  				}catch(Exception e) {
 	  					clientUI.display("Could not login");
 	  				}
-				} else {
+				} 
+	  			else {
 					clientUI.display("You are already logged in");		
 				}
-	  		} else {
+	  		} 
+	  		else {
+	  			
 	  			try{
 	  		      sendToServer(message);
 	  		    }catch(IOException e){
